@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Advanced Filters
-// @version      0.1
+// @version      0.1.1
 // @match        https://animemusicquiz.com/*
 // ==/UserScript==
 
@@ -46,12 +46,23 @@ var activeCustomFilterList = []
 
 // ---------------------------------------------------------
 
-ExpandQuestionList.prototype.super_resetFilterLayout = ExpandQuestionList.prototype.resetFilterLayout
+setup()
 
-hideAmqFilters()
-insertButtonRow()
-addPresetButtons()
+function setup() {
+    var expandLibrary = document.getElementById("expandLibraryPage")
+    if (expandLibrary == null) {
+        setTimeout(setup, 1000)
+        return
+    }
 
+    ExpandQuestionList.prototype.super_resetFilterLayout = ExpandQuestionList.prototype.resetFilterLayout
+    ExpandQuestionSongEntry.prototype.applyFilter = applyFilter
+    ExpandQuestionList.prototype.resetFilterLayout = resetFilterLayout
+
+    hideAmqFilters()
+    insertButtonRow()
+    addPresetButtons()
+}
 
 function hideAmqFilters() {
     document.getElementById("elMissingFilter").parentElement.className += " hidden"
@@ -141,7 +152,7 @@ function hasResolutionWithStatus(songEntry, host, resolution, status) {
     return (hasResolutionInOpenHosts || hasResolutionInClosedHosts)
 }
 
-ExpandQuestionSongEntry.prototype.applyFilter = function(filter, closedHostFilter) {
+function applyFilter(filter, closedHostFilter) {
     var isIncludedInSongTypeFilter = (filter.openings && this.type === 1) || (filter.endings && this.type === 2) || (filter.inserts && this.type === 3)
     var isIncludedInCustomFilters = activeCustomFilterList.map(filter => { return isIncludedInCustomFilter(this, filter) }).includes(false) === false
 
@@ -149,7 +160,7 @@ ExpandQuestionSongEntry.prototype.applyFilter = function(filter, closedHostFilte
     this.updateDisplay()
 }
 
-ExpandQuestionList.prototype.resetFilterLayout = function() {
+function resetFilterLayout() {
     this.super_resetFilterLayout()
     resetCustomFiltersAppearance()
 }
