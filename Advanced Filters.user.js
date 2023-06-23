@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Advanced Filters
-// @version      0.1.1
+// @version      0.1.2
 // @match        https://animemusicquiz.com/*
 // ==/UserScript==
 
@@ -10,8 +10,7 @@ var filterType = {
 }
 
 var host = {
-    catbox: "catbox",
-    openingsmoe: "openingsmoe"
+    catbox: "catbox"
 }
 
 var resolution = {
@@ -27,21 +26,18 @@ var somethingOnCatboxFilter = { type: filterType.uploaded, host: host.catbox, re
 var missingCatbox720Filter = { type: filterType.missing, host: host.catbox, resolution: resolution["720"] }
 var missingCatbox480Filter = { type: filterType.missing, host: host.catbox, resolution: resolution["480"] }
 var missingMp3Filter = { type: filterType.missing, host: host.catbox, resolution: resolution.mp3 }
-var missingOpeningsMoeFilter = { type: filterType.missing, host: host.openingsmoe, resolution: resolution["720"] } // doesnt matter which resolution
 
 var uploadedCatbox720Filter = { type: filterType.uploaded, host: host.catbox, resolution: resolution["720"] }
 var uploadedCatbox480Filter = { type: filterType.uploaded, host: host.catbox, resolution: resolution["480"] }
 var uploadedMp3Filter = { type: filterType.uploaded, host: host.catbox, resolution: resolution.mp3 }
-var uploadedOpeningsMoeFilter = { type: filterType.uploaded, host: host.openingsmoe, resolution: resolution["720"] } // doesnt matter which resolution
 
 // Presets
-var missingEverythingPreset = { title: "Missing", filterList: [missingCatbox720Filter, missingCatbox480Filter, missingMp3Filter, missingOpeningsMoeFilter] }
-var hasOnlyMp3Preset = { title: "Only MP3", filterList: [missingCatbox720Filter, missingCatbox480Filter, uploadedMp3Filter, missingOpeningsMoeFilter] }
+var missingEverythingPreset = { title: "Missing", filterList: [missingCatbox720Filter, missingCatbox480Filter, missingMp3Filter] }
+var hasOnlyMp3Preset = { title: "Only MP3", filterList: [missingCatbox720Filter, missingCatbox480Filter, uploadedMp3Filter] }
 var missingMp3Preset = { title: "Missing MP3", filterList: [somethingOnCatboxFilter, missingMp3Filter] }
-var openingsMoePreset = { title: "Openings.moe", filterList: [uploadedOpeningsMoeFilter] }
-var missingCatbox720Preset = { title: "Missing catbox 720", filterList: [missingCatbox720Filter, uploadedCatbox480Filter] }
+var missingCatbox720Preset = { title: "Missing 720", filterList: [missingCatbox720Filter, uploadedCatbox480Filter] }
 
-var presetList = [missingEverythingPreset, hasOnlyMp3Preset, missingMp3Preset, openingsMoePreset, missingCatbox720Preset]
+var presetList = [missingEverythingPreset, hasOnlyMp3Preset, missingMp3Preset, missingCatbox720Preset]
 var activeCustomFilterList = []
 
 // ---------------------------------------------------------
@@ -66,7 +62,6 @@ function setup() {
 
 function hideAmqFilters() {
     document.getElementById("elMissingFilter").parentElement.className += " hidden"
-    document.getElementById("elOpeningsMoeFilter").parentElement.className += " hidden"
 }
 
 function addPresetButtons() {
@@ -75,7 +70,7 @@ function addPresetButtons() {
 
 function addPresetButtonButton(preset) {
     var buttonRow = lastButtonRow()
-    if (buttonRow.children.length >= 3) {
+    if (buttonRow.children.length >= 2) {
         buttonRow = insertButtonRow()
     }
 
